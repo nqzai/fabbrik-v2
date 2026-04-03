@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react'; 
 import Link from 'next/link';
 import {
   Zap, GitBranch, Lock, Database, Shield,
@@ -120,7 +120,7 @@ function MockDashboard() {
   );
 }
 
-const MOCKUP_MAP: Record<string, () => JSX.Element> = {
+const MOCKUP_MAP: Record<string, () => React.ReactElement> = {
   questionnaire: MockQuestionnaire,
   blueprint: MockBlueprint,
   github: MockGitHub,
