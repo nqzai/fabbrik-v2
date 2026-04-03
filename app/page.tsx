@@ -804,8 +804,8 @@ export default function Landing() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Security & Privacy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li><Link href="/security" className="hover:text-white transition-colors">Security & Privacy</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -822,9 +822,9 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto border-t border-white/10 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
           <p>© 2026 Fabbrik. Immortal Reality PA LLC. All rights reserved.</p>
           <div className="flex gap-4 mt-2 sm:mt-0">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Security</a>
+            <Link href="/security" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/security" className="hover:text-white transition-colors">Security</Link>
           </div>
         </div>
       </footer>
