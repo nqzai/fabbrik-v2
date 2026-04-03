@@ -634,7 +634,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto border-t border-white/10 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} Fabbrik. Immortal Reality PA LLC. All rights reserved.</p>
+          <p>© 2026 Fabbrik. Immortal Reality PA LLC. All rights reserved.</p>
           <div className="flex gap-4 mt-2 sm:mt-0">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
