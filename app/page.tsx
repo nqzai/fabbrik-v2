@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'; 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Zap, GitBranch, Lock, Database, Shield,
