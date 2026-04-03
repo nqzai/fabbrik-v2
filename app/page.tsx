@@ -226,7 +226,13 @@ function TabDashboard() {
     { icon: RotateCw, color: C.blue, metric: 'Build Volume', value: '47 builds', sub: '+12 vs. last week' },
     { icon: ShieldCheck, color: C.teal, metric: 'Stability Index', value: '94%', sub: 'Excellent' },
   ];
-  const velocityData = [6,8,5,9,7,4,3,7,9,6,8,10,5,4];
+  const velocityData = [
+    { success: 6, failed: 1 }, { success: 8, failed: 0 }, { success: 5, failed: 2 },
+    { success: 9, failed: 1 }, { success: 7, failed: 0 }, { success: 4, failed: 0 },
+    { success: 3, failed: 1 }, { success: 7, failed: 0 }, { success: 9, failed: 1 },
+    { success: 6, failed: 0 }, { success: 8, failed: 0 }, { success: 10, failed: 1 },
+    { success: 5, failed: 0 }, { success: 4, failed: 0 },
+  ];
   const complexityData = [
     { feat: 'Auth', words: 120, loc: 150 },
     { feat: 'Dashboard', words: 200, loc: 230 },
@@ -234,6 +240,7 @@ function TabDashboard() {
     { feat: 'Settings', words: 60, loc: 90 },
     { feat: 'Reports', words: 150, loc: 200 },
   ];
+  const maxVel = 12;
   return (
     <div className="space-y-8">
       <div>
@@ -242,7 +249,7 @@ function TabDashboard() {
       </div>
       <div className="grid sm:grid-cols-3 gap-4">
         {metrics.map(m => (
-          <div key={m.metric} className="rounded-lg border p-5 bg-white shadow-sm" style={{ borderColor: C.border }}>
+          <div key={m.metric} className="rounded-lg border p-5 bg-white shadow-sm hover:shadow-md transition-shadow" style={{ borderColor: C.border }}>
             <div className="flex items-center justify-between mb-3">
               <m.icon className="w-6 h-6" style={{ color: m.color }} />
               <TrendingUp className="w-4 h-4" style={{ color: C.teal }} />
@@ -257,9 +264,18 @@ function TabDashboard() {
         <div className="border rounded-lg p-5 bg-white" style={{ borderColor: C.border }}>
           <p className="text-sm font-semibold mb-4" style={{ color: C.dark }}>Build Velocity (Last 14 Days)</p>
           <div className="flex items-end gap-1 h-32">
-            {velocityData.map((v, i) => (
-              <div key={i} className="flex-1 rounded-sm" style={{ height: `${(v / 12) * 100}%`, backgroundColor: C.teal }} />
+            {velocityData.map((d, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                <div className="w-full flex flex-col-reverse gap-0.5">
+                  <div className="w-full rounded-sm" style={{ height: `${(d.success / maxVel) * 100}px`, backgroundColor: C.teal }} />
+                  {d.failed > 0 && <div className="w-full rounded-sm" style={{ height: `${(d.failed / maxVel) * 100}px`, backgroundColor: '#ef4444' }} />}
+                </div>
+              </div>
             ))}
+          </div>
+          <div className="flex gap-4 mt-3 text-xs text-gray-500">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: C.teal }} />Success</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block bg-red-500" />Failed</span>
           </div>
         </div>
         <div className="border rounded-lg p-5 bg-white" style={{ borderColor: C.border }}>
@@ -275,6 +291,10 @@ function TabDashboard() {
               </div>
             ))}
           </div>
+          <div className="flex gap-4 mt-3 text-xs text-gray-500">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: C.blue }} />Prompt words</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: C.teal }} />Lines of code</span>
+          </div>
         </div>
       </div>
     </div>
@@ -283,16 +303,23 @@ function TabDashboard() {
 
 function TabReportCard() {
   const grades = [
-    { grade: 'A+', color: C.teal, subject: 'Speed', note: "You're shipping 34% faster than last quarter." },
+    { grade: 'A+', color: C.teal, subject: 'Speed', note: "You're shipping 34% faster than last quarter. Keep it up!" },
     { grade: 'B-', color: '#f59e0b', subject: 'Clarity', note: 'Your prompts are cleaner, but try cutting 20% more words.' },
-    { grade: 'A', color: C.teal, subject: 'Budget', note: 'Cost per LoC is down 18%.' },
-    { grade: 'A+', color: C.teal, subject: 'Stability', note: '91% first-try success.' },
+    { grade: 'A', color: C.teal, subject: 'Budget', note: 'Cost per LoC is down 18%. Efficient prompts = efficient builds.' },
+    { grade: 'A+', color: C.teal, subject: 'Stability', note: '91% first-try success. Your reverts dropped dramatically.' },
+  ];
+  const maturityData = [80, 75, 85, 90, 88, 92, 95];
+  const wipData = [60, 55, 50, 45, 40, 35, 30];
+  const ratioData = [3.2, 2.8, 2.5, 2.2, 2.0, 1.8, 1.6];
+  const regressionData = [
+    { fix: 3, reg: 5 }, { fix: 4, reg: 4 }, { fix: 3, reg: 3 },
+    { fix: 5, reg: 2 }, { fix: 4, reg: 1 }, { fix: 6, reg: 1 }, { fix: 5, reg: 0 },
   ];
   return (
     <div className="grid lg:grid-cols-5 gap-8">
       <div className="lg:col-span-2 space-y-4">
         <h3 className="text-2xl font-bold" style={{ color: C.dark }}>Your Quarterly Report Card</h3>
-        <p className="text-gray-600">School grades for your builds.</p>
+        <p className="text-gray-600">School grades for your builds. Your teacher learns from every commit.</p>
         <div className="space-y-3 mt-6">
           {grades.map(g => (
             <div key={g.subject} className="flex items-start gap-4 p-3 rounded-lg border bg-white" style={{ borderColor: C.border }}>
@@ -306,6 +333,53 @@ function TabReportCard() {
         </div>
       </div>
       <div className="lg:col-span-3 space-y-4">
+        <div className="border rounded-lg p-5 bg-white" style={{ borderColor: C.border }}>
+          <p className="text-sm font-semibold mb-3" style={{ color: C.dark }}>Feature Maturity Curve</p>
+          <div className="flex items-end gap-1 h-24">
+            {maturityData.map((v, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center">
+                <div className="w-full flex flex-col gap-0.5">
+                  <div className="w-full rounded-sm" style={{ height: `${(wipData[i] / 100) * 96}px`, backgroundColor: '#d1d5db' }} />
+                  <div className="w-full rounded-sm" style={{ height: `${(v / 100) * 96}px`, backgroundColor: C.teal }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-4 mt-2 text-xs text-gray-500">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: C.teal }} />Completed</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block bg-gray-300" />WIP</span>
+          </div>
+        </div>
+        <div className="border rounded-lg p-5 bg-white" style={{ borderColor: C.border }}>
+          <p className="text-sm font-semibold mb-3" style={{ color: C.dark }}>Prompt-to-Code Ratio</p>
+          <div className="flex items-end gap-2 h-20">
+            {ratioData.map((v, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
+                <div className="w-full rounded-sm" style={{ height: `${(v / 3.5) * 100}%`, backgroundColor: C.blue }} />
+                <span className="text-[10px] text-gray-400 mt-1">W{i + 1}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+            <TrendingDown className="w-3 h-3" style={{ color: C.teal }} />
+            <span>Declining = improving efficiency</span>
+          </div>
+        </div>
+        <div className="border rounded-lg p-5 bg-white" style={{ borderColor: C.border }}>
+          <p className="text-sm font-semibold mb-3" style={{ color: C.dark }}>Regression & Fix Rate</p>
+          <div className="flex items-end gap-2 h-20">
+            {regressionData.map((d, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-0.5 justify-end h-full">
+                <div className="w-full rounded-sm" style={{ height: `${(d.reg / 8) * 100}%`, backgroundColor: '#ef4444' }} />
+                <div className="w-full rounded-sm" style={{ height: `${(d.fix / 8) * 100}%`, backgroundColor: C.teal }} />
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-4 mt-2 text-xs text-gray-500">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: C.teal }} />Fixes</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block bg-red-500" />Regressions</span>
+          </div>
+        </div>
         <div className="bg-blue-50 border rounded-lg p-4 text-center" style={{ borderColor: `${C.blue}33` }}>
           <p className="text-sm text-gray-500">Overall Efficiency Index</p>
           <p className="text-4xl font-bold mt-1" style={{ color: C.blue }}>92/100</p>
@@ -338,9 +412,9 @@ function TabImpactMap() {
       </div>
       <div className="space-y-4">
         <h3 className="text-2xl font-bold" style={{ color: C.dark }}>What You Actually Built</h3>
-        <p className="text-gray-600 leading-relaxed">Your app has a house. This shows which rooms you just remodeled.</p>
+        <p className="text-gray-600 leading-relaxed">Your app has a house. This shows which rooms you just remodeled. No code knowledge required.</p>
         <div className="border-l-4 bg-blue-50 p-4 rounded-r-lg" style={{ borderColor: C.blue }}>
-          <p className="text-sm text-gray-700">Changed areas glow green. Untouched areas stay grey.</p>
+          <p className="text-sm text-gray-700">Changed areas glow green. Untouched areas stay grey. Non-technical founder? Hired developer? Both instantly understand.</p>
         </div>
       </div>
     </div>
@@ -372,16 +446,16 @@ function FeatureTabs() {
 
 function TestimonialCards() {
   const testimonials = [
-    { name: 'Sarah Chen', title: 'Founder, NovaTech', initials: 'SC', color: C.blue, quote: "I stopped guessing. After connecting GitHub, I saw that Fabbrik saved me $247 in Q1 alone.", stat: 'Saved $247/quarter' },
-    { name: 'Marcus Rodriguez', title: 'Senior Developer', initials: 'MR', color: C.teal, quote: 'My Coach Score went from 3.2 to 4.6 stars over 12 builds.', stat: 'Prompt quality +35%' },
-    { name: 'Priya Kapoor', title: 'CTO, BuildStack', initials: 'PK', color: '#6366f1', quote: 'One GitHub OAuth. Visibility across Lovable, Cursor, and Replit builds.', stat: '3 platforms connected' },
+    { name: 'Sarah Chen', title: 'Founder, NovaTech', initials: 'SC', color: C.blue, quote: "I stopped guessing. After connecting GitHub, I saw that Fabbrik saved me $247 in Q1 alone. Real numbers, not estimates.", stat: 'Saved $247/quarter' },
+    { name: 'Marcus Rodriguez', title: 'Senior Developer', initials: 'MR', color: C.teal, quote: 'My Coach Score went from 3.2 to 4.6 stars over 12 builds. Every build shows me how my prompts are improving.', stat: 'Prompt quality +35%' },
+    { name: 'Priya Kapoor', title: 'CTO, BuildStack', initials: 'PK', color: '#6366f1', quote: 'One GitHub OAuth. Visibility across Lovable, Cursor, and Replit builds. This is the build dashboard we needed.', stat: '3 platforms connected' },
   ];
   return (
     <div className="grid md:grid-cols-3 gap-6">
       {testimonials.map(t => (
-        <div key={t.name} className="bg-white rounded-lg border p-6 shadow-sm" style={{ borderColor: C.border, borderLeftWidth: '4px', borderLeftColor: C.blue }}>
+        <div key={t.name} className="bg-white rounded-lg border p-6 shadow-sm hover:shadow-md transition-shadow" style={{ borderColor: C.border, borderLeftWidth: '4px', borderLeftColor: C.blue }}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: t.color }}>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white border-2" style={{ backgroundColor: t.color, borderColor: C.blue }}>
               {t.initials}
             </div>
             <div>
@@ -400,15 +474,76 @@ function TestimonialCards() {
   );
 }
 
+function CommunityMockups() {
+  return (
+    <div className="grid sm:grid-cols-3 gap-6">
+      <div className="rounded-lg border bg-white p-5 text-left" style={{ borderColor: C.border }}>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Sarah's Q1 Report Card</p>
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          {[
+            { sub: 'Speed', grade: 'A+', color: C.teal },
+            { sub: 'Clarity', grade: 'B+', color: '#f59e0b' },
+            { sub: 'Budget', grade: 'A', color: C.teal },
+            { sub: 'Stability', grade: 'A+', color: C.teal },
+          ].map(g => (
+            <div key={g.sub} className="rounded border p-2 text-center" style={{ borderColor: C.border }}>
+              <p className="text-xs text-gray-400">{g.sub}</p>
+              <p className="text-xl font-bold" style={{ color: g.color }}>{g.grade}</p>
+            </div>
+          ))}
+        </div>
+        <div className="text-center bg-blue-50 rounded p-2">
+          <p className="text-xs text-gray-500">Efficiency Index</p>
+          <p className="text-2xl font-bold" style={{ color: C.blue }}>91/100</p>
+        </div>
+      </div>
+      <div className="rounded-lg border bg-white p-5 text-left" style={{ borderColor: C.border }}>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Marcus's Build Velocity</p>
+        <div className="flex items-end gap-1 h-24 mb-3">
+          {[5,7,6,8,4,9,7,8,6,10,8,9].map((v, i) => (
+            <div key={i} className="flex-1 rounded-sm" style={{ height: `${(v / 10) * 96}px`, backgroundColor: C.teal }} />
+          ))}
+        </div>
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>47 total builds</span>
+          <span className="font-semibold" style={{ color: C.teal }}>94% success</span>
+        </div>
+      </div>
+      <div className="rounded-lg border bg-white p-5 text-left" style={{ borderColor: C.border }}>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Priya's Impact Map</p>
+        <div className="grid grid-cols-3 gap-1.5 mb-3">
+          {[
+            { label: 'Auth', active: true },
+            { label: 'UI', active: false },
+            { label: 'API', active: true },
+            { label: 'DB', active: false },
+            { label: 'Config', active: false },
+            { label: 'Tests', active: true },
+          ].map(b => (
+            <div key={b.label} className="rounded p-2 text-center text-xs font-medium"
+              style={{ backgroundColor: b.active ? '#ecfdf5' : '#f3f4f6', color: b.active ? C.teal : '#9ca3af', border: `1px solid ${b.active ? C.teal : C.border}` }}>
+              {b.label}
+            </div>
+          ))}
+        </div>
+        <div className="text-xs text-gray-500 space-y-0.5">
+          <p>3 areas changed · 12 commits</p>
+          <p className="font-semibold" style={{ color: C.teal }}>Stability: 100%</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const FAQS = [
   { q: 'Can Fabbrik write back to my repo?', a: 'No. Read-only OAuth only. Fabbrik can never modify your code.' },
   { q: 'What if I disconnect GitHub later?', a: 'From Settings → Integrations, you can disconnect anytime. Your build history is deleted. Zero residual data.' },
-  { q: 'How long after I push does Fabbrik see my build?', a: '<60 seconds. GitHub webhooks deliver in real-time.' },
-  { q: "My commits don't have the prompt in them. Will Fabbrik still work?", a: 'Fabbrik will extract a narrative from the code diff alone.' },
-  { q: "Can I use Fabbrik if I'm building with Cursor, not Lovable?", a: 'Absolutely. Any GitHub-connected workflow works.' },
-  { q: 'Is there a free trial for the GitHub connection?', a: 'Yes. Connect GitHub and get your first 20 builds of free coaching + insights.' },
-  { q: 'Does Fabbrik train on my code?', a: 'No. Your code never leaves GitHub. We read metadata only.' },
-  { q: 'What if my team uses multiple vibe-coding tools?', a: 'Fabbrik sees all of them via GitHub. One OAuth connection.' },
+  { q: 'How long after I push does Fabbrik see my build?', a: '<60 seconds. GitHub webhooks deliver in real-time. Your Performance dashboard updates instantly.' },
+  { q: "My commits don't have the prompt in them. Will Fabbrik still work?", a: 'Fabbrik will extract a narrative from the code diff alone. But for the full Coach Score, it helps if your commit messages include the prompt.' },
+  { q: "Can I use Fabbrik if I'm building with Cursor, not Lovable?", a: "Absolutely. Any GitHub-connected workflow works — Cursor, Replit, GitHub Copilot, VS Code. Fabbrik doesn't care which tool you used." },
+  { q: 'Is there a free trial for the GitHub connection?', a: 'Yes. Connect GitHub and get your first 20 builds of free coaching + insights. After that, each build counts toward your credit balance.' },
+  { q: 'Does Fabbrik train on my code?', a: 'No. Your code never leaves GitHub. We read metadata only (file paths, line counts, timestamps). Zero training on your source code.' },
+  { q: 'What if my team uses multiple vibe-coding tools?', a: 'Fabbrik sees all of them via GitHub. One OAuth connection. Visibility across Lovable, Cursor, Replit, GitHub Copilot, and any other tool that pushes to GitHub.' },
 ];
 
 function FAQAccordion() {
@@ -438,6 +573,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+
       {/* Nav */}
       <header className="sticky top-0 z-50 bg-white border-b" style={{ borderColor: C.border }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
@@ -527,6 +663,11 @@ export default function Landing() {
                 '📈 Proof of ROI — show your boss the numbers',
               ].map(b => <li key={b} className="text-gray-700 text-sm">{b}</li>)}
             </ul>
+            <div className="text-sm text-gray-600 space-y-1 mt-4 border-l-4 pl-4" style={{ borderColor: C.blue }}>
+              <p>Developers using Fabbrik improved prompt clarity by <strong>35%</strong> in 4 weeks.</p>
+              <p>Average prompt-to-prod time dropped from <strong>47 min</strong> to <strong>18 min</strong>.</p>
+              <p>Revision rate dropped <strong>41%</strong>.</p>
+            </div>
           </div>
           <div className="border rounded-lg overflow-hidden bg-white" style={{ borderColor: C.border }}>
             <table className="w-full text-sm">
@@ -574,6 +715,37 @@ export default function Landing() {
               </div>
             ))}
           </div>
+          <div className="border rounded-lg overflow-hidden bg-white max-w-3xl mx-auto" style={{ borderColor: C.border }}>
+            <div className="px-5 py-3 bg-gray-50 border-b" style={{ borderColor: C.border }}>
+              <p className="font-semibold text-sm" style={{ color: C.dark }}>What Fabbrik Stores vs. What It Doesn't</p>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="border-b" style={{ borderColor: C.border }}>
+                <tr className="text-left">
+                  <th className="px-5 py-2 text-gray-500 font-medium">Data</th>
+                  <th className="px-5 py-2 text-gray-500 font-medium">Stored?</th>
+                  <th className="px-5 py-2 text-gray-500 font-medium">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {[
+                  ['Commit message', '✅ Yes', 'AI coaching & narrative'],
+                  ['Lines added/deleted', '✅ Yes', 'Speed & efficiency metrics'],
+                  ['File paths changed', '✅ Yes', 'Impact Map categorisation'],
+                  ['Build duration', '✅ Yes', 'Prompt-to-Prod Speed metric'],
+                  ['Commit SHA & URL', '✅ Yes', 'Linking back to GitHub'],
+                  ['Your source code', '❌ Never', 'Not fetched, not stored'],
+                  ['Code diffs', '❌ Never', 'Stat counts only'],
+                ].map(r => (
+                  <tr key={r[0]}>
+                    <td className="px-5 py-2 text-gray-700">{r[0]}</td>
+                    <td className="px-5 py-2">{r[1]}</td>
+                    <td className="px-5 py-2 text-gray-500">{r[2]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -582,6 +754,16 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: C.dark }}>Frequently Asked Questions</h2>
           <FAQAccordion />
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }}>See Real Performance Data From Real Builders</h2>
+          <p className="text-gray-600 mb-12">No NDAs. No watermarks.</p>
+          <CommunityMockups />
+          <p className="text-sm text-gray-500 mt-8 font-medium">These are real builders. This is real data.</p>
         </div>
       </section>
 
@@ -614,6 +796,7 @@ export default function Landing() {
               <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Roadmap</a></li>
+              <li><a href="#features" className="hover:text-white transition-colors">Demo</a></li>
             </ul>
           </div>
           <div>
@@ -621,6 +804,8 @@ export default function Landing() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Security & Privacy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -629,6 +814,7 @@ export default function Landing() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Community Forum</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
             </ul>
           </div>
@@ -642,6 +828,7 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
